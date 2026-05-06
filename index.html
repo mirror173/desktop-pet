@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>上班族 AI 桌宠助手</title>
+    <link rel="stylesheet" href="./main.css" />
+  </head>
+  <body>
+    <div id="pet">
+      <div id="bubbleChat" class="bubble chat" aria-live="polite"></div>
+      <div id="bubbleSelf" class="bubble self" aria-live="polite"></div>
+      <button id="characterTapArea" class="no-drag" type="button" aria-label="桌宠角色">
+        <div id="characterWrap" class="state-idle">
+          <img id="character" src="./assets/形象1.jpg" alt="李泽言形象" />
+          <video id="characterGif" muted playsinline preload="metadata" aria-label="李泽言形象动画"></video>
+          <div id="broomProp" aria-hidden="true"></div>
+        </div>
+      </button>
+
+      <section id="plannerPanel" class="no-drag collapsed" aria-label="计划面板">
+        <button id="collapsePanelBtn" class="panel-collapse-btn" type="button" aria-label="收起">×</button>
+
+        <div class="quick-row">
+          <input id="quickInput" type="text" placeholder="笨蛋，说吧。我听着。" />
+          <button id="quickParseBtn" type="button">发送</button>
+        </div>
+      </section>
+
+      <section id="advancedDock" class="no-drag collapsed" aria-label="高级功能悬浮按钮组">
+        <button id="advancedToggleFab" class="adv-fab adv-fab-master" type="button" title="高级功能总开关">
+          <span class="adv-fab-icon">🌹</span>
+        </button>
+        <div id="advancedQuickMenu" class="adv-quick-menu" aria-label="高级功能快捷菜单">
+          <button class="adv-fab" type="button" data-panel="checkin" data-default-icon="📝" title="打卡）"><span class="adv-fab-icon">📝</span></button>
+          <button class="adv-fab" type="button" data-panel="control-center" data-default-icon="🎛️" title="飞书控制中心"><span class="adv-fab-icon">🎛️</span></button>
+          <button class="adv-fab" type="button" data-panel="reminder" data-default-icon="🔔" title="提醒"><span class="adv-fab-icon">🔔</span></button>
+          <button class="adv-fab" type="button" data-panel="period" data-default-icon="🔎" title="文件查找"><span class="adv-fab-icon">🔎</span></button>
+          <button class="adv-fab" type="button" data-panel="settings" data-default-icon="⚙️" title="设置"><span class="adv-fab-icon">⚙️</span></button>
+          <button class="adv-fab" type="button" id="webAssistantBtn" data-panel="web-assistant" data-default-icon="💻" title="网页助手"><span class="adv-fab-icon">💻</span></button>
+          <button class="adv-fab" type="button" data-panel="smarttodo" data-default-icon="🔗" title="SmartTODO"><span class="adv-fab-icon">🔗</span></button>
+          <button class="adv-fab" type="button" data-feishu-mode="toggle" data-default-icon="📘" title="飞书模式"><span class="adv-fab-icon">📘</span></button>
+        </div>
+      </section>
+
+      <section id="advancedPanels" class="no-drag" aria-label="高级功能面板区">
+        <article class="adv-panel hidden" data-panel="reminder" aria-label="提醒面板">
+          <header class="adv-panel-head">
+            <h3>提醒</h3>
+            <button class="adv-close" type="button" data-close-panel data-no-window-drag>×</button>
+          </header>
+          <div class="adv-panel-body">
+            <div id="confirmCard" class="confirm-card no-drag">
+              <div class="confirm-copy">提醒设置</div>
+              <div class="field-row">
+                <label for="taskTitle">事项</label>
+                <input id="taskTitle" type="text" />
+              </div>
+              <div class="field-row">
+                <label for="taskTime">时间</label>
+                <input id="taskTime" type="datetime-local" />
+              </div>
+              <div class="field-row">
+                <label for="taskRepeat">重复</label>
+                <select id="taskRepeat">
+                  <option value="none">不重复</option>
+                  <option value="daily">每天</option>
+                  <option value="weekly">按星期</option>
+                </select>
+              </div>
+              <div id="weeklyDaysRow" class="field-row hidden">
+                <label>星期</label>
+                <div class="weekdays">
+                  <label class="weekday"><input type="checkbox" value="1" />一</label>
+                  <label class="weekday"><input type="checkbox" value="2" />二</label>
+                  <label class="weekday"><input type="checkbox" value="3" />三</label>
+                  <label class="weekday"><input type="checkbox" value="4" />四</label>
+                  <label class="weekday"><input type="checkbox" value="5" />五</label>
+                  <label class="weekday"><input type="checkbox" value="6" />六</label>
+                  <label class="weekday"><input type="checkbox" value="0" />日</label>
+                </div>
+              </div>
+              <div class="confirm-actions">
+                <button id="confirmBtn" type="button">确认</button>
+                <button id="cancelBtn" class="ghost" type="button">取消</button>
+              </div>
+            </div>
+            <ul id="planList"></ul>
+          </div>
+        </article>
+
+        <article class="adv-panel hidden" data-panel="checkin" aria-label="打卡面板">
+          <header class="adv-panel-head">
+            <h3>每日必做</h3>
+            <button class="adv-close" type="button" data-close-panel>×</button>
+          </header>
+          <div class="adv-panel-body checkin-v2-panel-body">
+            <div class="checkin-v2-message" id="checkinV2Message" aria-live="polite">还不开始？</div>
+
+            <div class="checkin-v2-toolbar">
+              <input id="checkinV2TaskInput" class="checkin-v2-input" type="text" maxlength="16" placeholder="输入任务，例如：整理日报" />
+              <button id="checkinV2AddTaskBtn" class="adv-action" type="button">新增必做任务</button>
+            </div>
+            <div class="checkin-v2-grid" id="checkinV2Grid" aria-label="任务打卡网格"></div>
+
+            <div class="checkin-v2-todo-card">
+              <div class="checkin-v2-card-head">
+                <span>倒计时事件</span>
+              </div>
+              <div class="checkin-v2-countdown-form">
+                <input id="checkinV2CountdownNameInput" class="checkin-v2-input" type="text" maxlength="16" placeholder="事件名，例如：省考报名截止" />
+                <input id="checkinV2CountdownDateInput" class="checkin-v2-input" type="datetime-local" />
+                <button id="checkinV2AddCountdownBtn" class="adv-action ghost" type="button">新增倒计时</button>
+              </div>
+              <div id="checkinV2CountdownList" class="checkin-v2-countdown-list" aria-label="倒计时列表"></div>
+            </div>
+
+          </div>
+        </article>
+
+        <article class="adv-panel hidden" data-panel="control-center" aria-label="控制中心面板">
+          <header class="adv-panel-head control-center-head">
+            <div class="control-center-head-left">
+              <h3 id="controlCenterTitle">飞书控制中心</h3>
+            </div>
+            <button class="adv-close" type="button" data-close-panel>×</button>
+          </header>
+          <div class="adv-panel-body control-center-panel">
+            <div class="control-center-pages">
+              <div class="control-center-page" data-control-page="main">
+                <div class="control-center-grid">
+
+                  <button class="control-center-card" type="button" data-control-action="work-arrival">
+                    <div class="icon">🚀</div>
+                    <div class="title">到岗一键梳理</div>
+                  </button>
+                  <button class="control-center-card" type="button" data-control-action="meeting-assistant">
+                    <div class="icon">🎤</div>
+                    <div class="title">会议信息助手</div>
+                  </button>
+                  <button class="control-center-card" type="button" data-control-action="weekly-report">
+                    <div class="icon">📊</div>
+                    <div class="title">每周工作周报</div>
+                  </button>
+                </div>
+              </div>
+
+              <div class="control-center-page hidden" data-control-page="task">
+                <div class="control-center-section"></div>
+              </div>
+              <div class="control-center-page hidden" data-control-page="review">
+                <div class="control-center-section">
+                </div>
+              </div>
+              <div class="control-center-page hidden" data-control-page="web">
+                <div class="control-center-section">
+                  <div class="control-center-list" id="controlCenterLinks"></div>
+                </div>
+                <div class="control-center-section control-center-edit-section">
+                  <div class="control-center-subtitle">编辑快捷入口</div>
+                  <div class="checkin-v2-row">
+                    <input id="controlCenterNameInput" class="checkin-v2-input" type="text" maxlength="16" placeholder="名称，例如：飞书" />
+                    <input id="controlCenterUrlInput" class="checkin-v2-input" type="url" placeholder="https://..." />
+                  </div>
+                  <div class="checkin-v2-actions">
+                    <button id="controlCenterAddBtn" class="adv-action" type="button">添加网页</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="adv-panel hidden" data-panel="period" aria-label="文件查找面板">
+          <header class="adv-panel-head">
+            <h3>文件查找</h3>
+            <button class="adv-close" type="button" data-close-panel>×</button>
+          </header>
+          <div class="adv-panel-body file-search-panel">
+            <div class="search-box">
+              <input type="text" id="searchInput" placeholder="输入文件名搜索本地文件..." />
+            </div>
+
+            <div class="filter-bar" id="filterBar">
+              <label class="filter active" data-type="all">全部</label>
+              <label class="filter" data-type="folder">文件夹</label>
+              <label class="filter" data-type="doc">文档</label>
+              <label class="filter" data-type="img">图片</label>
+              <label class="filter" data-type="video">视频</label>
+              <label class="filter" data-type="app">应用</label>
+            </div>
+
+            <div class="result-list" id="resultList">
+              <div class="empty-tip">请输入关键词开始搜索</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="adv-panel hidden" data-panel="settings" aria-label="设置面板">
+          <header class="adv-panel-head">
+            <h3>设置</h3>
+            <button class="adv-close" type="button" data-close-panel>×</button>
+          </header>
+          <div class="adv-panel-body">
+            <section class="adv-section" style="margin-top: 0; padding-top: 0; border-top: 0;">
+              <h4 style="margin: 0 0 12px 0; color: #fff;">📌 飞书状态</h4>
+
+              <div id="larkStatus" style="padding: 10px 12px; border-radius: 10px; background: #2a2a2a; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.06);">
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <span id="larkStatusText">未登录飞书</span>
+                  <span id="larkCurrentAccount" style="color: #9f9f9f; font-size: 12px;">当前账号：无</span>
+                </div>
+              </div>
+
+              <div id="larkLoginArea">
+                <p style="margin: 0 0 12px 0; color: #aaa; font-size: 14px;">首次使用、退出后重新登录，或切换账号时，从后端发起飞书 OAuth。</p>
+                <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+                  <button id="larkLoginBtn" class="adv-action" type="button" style="flex: 1; min-width: 120px;">登录飞书</button>
+                  <button id="larkSwitchBtn" class="adv-action ghost" type="button" style="flex: 1; min-width: 120px;">切换账号</button>
+                  <button id="larkRefreshBtn" class="adv-action ghost" type="button" style="flex: 1; min-width: 120px;">刷新状态</button>
+                </div>
+
+                <div id="larkQrArea" class="hidden" style="padding: 16px; background: #fff; border-radius: 8px; text-align: center; margin-bottom: 12px;">
+                  <div id="larkQrCode" style="font-size: 12px; line-height: 1.4; font-family: monospace; color: #000; white-space: pre-wrap; text-align: left; display: block;"></div>
+                  <p style="margin: 12px 0 0 0; color: #333; font-size: 14px;">请在后端授权页面完成登录</p>
+                  <p style="margin: 4px 0 0 0; color: #666; font-size: 12px;">如果页面未自动打开，可手动访问：<a href="#" id="larkLoginLink" target="_blank" style="color: #165DFF;"></a></p>
+                </div>
+              </div>
+
+              <div id="larkLoggedInArea" class="hidden">
+                <p style="margin: 0 0 12px 0; color: #aaa; font-size: 14px;">已登录飞书，可继续使用，也可以退出或切换账号。</p>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <button id="larkLogoutBtn" class="adv-action ghost" type="button" style="flex: 1; min-width: 110px;">退出登录</button>
+                  <button id="larkSwitchBtnLoggedIn" class="adv-action ghost" type="button" style="flex: 1; min-width: 110px;">切换账号</button>
+                  <button id="larkTestBtn" class="adv-action" type="button" style="flex: 1; min-width: 110px;">测试后端</button>
+                </div>
+              </div>
+
+              <div id="larkConfigSection" class="hidden" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #333;">
+                <h4 style="margin: 0 0 12px 0; color: #ccc; font-size: 14px;">⚙️ 功能配置</h4>
+
+                <div style="margin-bottom: 14px;">
+                  <label style="display: block; color: #aaa; font-size: 13px; margin-bottom: 6px;">默认群聊 <span style="color:#666;font-size:11px;">（发消息、到岗梳理都从这里读）</span></label>
+                  <div style="display: flex; gap: 8px; align-items: center;">
+                    <select id="larkDefaultChatSelect" style="flex:1; padding: 8px 10px; background: #333; color: #fff; border: 1px solid #555; border-radius: 6px; font-size: 13px;">
+                      <option value="">-- 点击右侧按钮加载群聊列表 --</option>
+                    </select>
+                    <button id="larkRefreshChatsBtn" class="adv-action ghost" type="button" style="padding: 8px 12px; font-size: 12px; white-space: nowrap;">刷新列表</button>
+                  </div>
+                </div>
+
+                <details id="larkBitableDetails" style="margin-top: 4px;">
+                  <summary style="color: #aaa; font-size: 13px; cursor: pointer; padding: 6px 0; user-select: none;">📊 多维表格配置（到岗梳理 / 周报）</summary>
+                  <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 10px; padding: 12px; background: #2a2a2a; border-radius: 8px;">
+                    <p style="margin:0; color:#777; font-size:11px; line-height:1.5;">在飞书多维表格地址栏找到 App Token（/base/ 后面的字符串）和各表的 Table ID（点击表格标签后 URL 里的 tbl…）</p>
+                    <div>
+                      <label style="display: block; color: #aaa; font-size: 12px; margin-bottom: 4px;">App Token（多维表格共用）</label>
+                      <input id="larkBitableToken" type="text" placeholder="EEHNbkyiMajDMos5qimcGbkMnCh" style="width:100%; padding:7px 10px; background:#333; color:#fff; border:1px solid #555; border-radius:6px; font-size:12px; box-sizing:border-box;">
+                    </div>
+                    <div>
+                      <label style="display: block; color: #aaa; font-size: 12px; margin-bottom: 4px;">到岗梳理 Table ID</label>
+                      <input id="larkBriefingTableId" type="text" placeholder="tblqrjBB68Ayr9TV" style="width:100%; padding:7px 10px; background:#333; color:#fff; border:1px solid #555; border-radius:6px; font-size:12px; box-sizing:border-box;">
+                    </div>
+                    <div>
+                      <label style="display: block; color: #aaa; font-size: 12px; margin-bottom: 4px;">周报 Table ID</label>
+                      <input id="larkWeeklyTableId" type="text" placeholder="tblhiFLMRGqL7vTO" style="width:100%; padding:7px 10px; background:#333; color:#fff; border:1px solid #555; border-radius:6px; font-size:12px; box-sizing:border-box;">
+                    </div>
+                  </div>
+                </details>
+
+                <div style="margin-top: 14px; display: flex; gap: 8px; align-items: center;">
+                  <button id="larkSaveConfigBtn" class="adv-action" type="button" style="flex: 1;">保存配置</button>
+                  <span id="larkConfigStatus" style="font-size:12px; color:#aaa;"></span>
+                </div>
+              </div>
+            </section>
+          </div>
+        </article>
+      </section>
+    </div>
+
+    <div id="reminderOverlay" class="reminder-overlay hidden no-drag" role="dialog" aria-modal="true" aria-label="提醒">
+      <div class="reminder-card">
+        <div id="reminderText" class="reminder-text"></div>
+        <div id="reminderActions" class="reminder-actions hidden">
+          <button id="doneBtn" type="button">完成</button>
+          <button id="laterBtn" type="button">稍后10分钟</button>
+          <button id="skipBtn" class="ghost" type="button">跳过</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="./src/renderer/utils/text.js"></script>
+    <script src="./src/renderer/utils/time.js"></script>
+    <script src="./src/renderer/utils/briefing.js"></script>
+    <script src="./src/renderer/utils/file-search.js"></script>
+    <script src="./src/renderer/utils/advanced-ui.js"></script>
+    <script src="./renderer.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const openWebBtn = document.getElementById('openWebBtn');
+        if (!openWebBtn) return;
+        openWebBtn.addEventListener('click', async () => {
+          // 用现成的preload API打开外部链接
+          await window.api.openExternalUrl('http://localhost:5000/'); // 替换成你实际的Web端地址
+        });
+      });
+    </script>
+  </body>
+</html>

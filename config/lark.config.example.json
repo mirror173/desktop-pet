@@ -1,0 +1,11 @@
+{
+  "appId": "",
+  "appSecret": "",
+  "appType": "SelfBuilt",
+  "domain": "Lark",
+  "loggerLevel": "info",
+  "backendBaseUrl": "http://127.0.0.1:3000",
+  "realtimeMode": "sdk",
+  "realtimeWsUrl": "",
+  "realtimeReconnectDelayMs": 3000
+}

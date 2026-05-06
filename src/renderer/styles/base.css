@@ -1,0 +1,366 @@
+body {
+  margin: 0;
+  background: transparent;
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+  color: #f3f3f5;
+}
+
+.reminder-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000000;
+  pointer-events: none;
+  background: transparent;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.reminder-overlay * {
+  pointer-events: auto;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.reminder-card {
+  width: min(360px, calc(100vw - 32px));
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(157, 43, 56, 0.95), rgba(181, 68, 80, 0.9));
+  box-shadow: 0 20px 60px rgba(157, 43, 56, 0.4);
+  padding: 20px;
+  -webkit-app-region: no-drag;
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transform: translateY(20px);
+}
+
+@keyframes slideUp {
+  to {
+    transform: translateY(0);
+  }
+}
+
+.reminder-text {
+  color: #fff;
+  font-size: 15px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+#pet {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border-radius: 24px;
+  background: transparent;
+  overflow: hidden;
+  -webkit-app-region: drag;
+  user-select: none;
+  border: none;
+}
+
+.no-drag,
+.no-drag * {
+  -webkit-app-region: no-drag;
+}
+
+#characterTapArea {
+  width: fit-content;
+  border: none;
+  padding: 0;
+  margin: 0 auto;
+  background: transparent;
+  cursor: pointer;
+  display: block;
+}
+
+#characterWrap {
+  width: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2px;
+  transform-origin: center bottom;
+  animation: petIdle 3.2s ease-in-out infinite;
+  will-change: transform;
+  position: relative;
+}
+
+#character,
+#characterGif {
+  width: 176px;
+  max-height: 230px;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.25));
+}
+
+#characterGif {
+  display: none;
+}
+
+#characterWrap.playing-gif #character {
+  display: none;
+}
+
+#characterWrap.playing-gif #characterGif {
+  display: block;
+}
+
+/* 播放动画时稍微放宽画框高度，确保不裁切上半部分 */
+#characterWrap.playing-gif #characterGif {
+  max-height: 320px;
+}
+
+/* 形象2：按“元素尺寸变为2倍”的方式放大，仍保持 contain 不裁切 */
+#characterWrap.playing-gif.video-zoom-2x #characterGif {
+  width: 352px;
+  max-height: 460px;
+}
+
+/* 形象1/2：视频下移一点（不缩放、不裁切） */
+#characterWrap.playing-gif.video-offset-down #characterGif {
+  transform: translateY(30px);
+}
+
+#broomProp {
+  position: absolute;
+  right: -16px;
+  bottom: 20px;
+  width: 56px;
+  height: 12px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #7f5b35 0%, #b58a58 35%, #a23b36 36%, #a23b36 100%);
+  transform-origin: 85% 50%;
+  transform: rotate(-26deg);
+  opacity: 0;
+  transition: opacity 0.16s ease;
+  pointer-events: none;
+}
+
+#broomProp::after {
+  content: '';
+  position: absolute;
+  left: -18px;
+  top: -4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px 12px 12px 4px;
+  background: repeating-linear-gradient(90deg, #d8b36f 0 3px, #c29958 3px 6px);
+  box-shadow: inset 0 0 0 1px rgba(96, 67, 32, 0.28);
+}
+
+#characterWrap.state-idle {
+  animation: petIdle 3.2s ease-in-out infinite;
+}
+
+#characterWrap.state-tap {
+  animation: petTap 0.28s ease;
+}
+
+#characterWrap.state-happy {
+  animation: petHappy 0.52s ease;
+}
+
+#characterWrap.state-shake {
+  animation: petShake 0.35s linear;
+}
+
+#characterWrap.state-blink {
+  animation: petBlink 0.24s ease;
+}
+
+#characterWrap.state-look-left {
+  animation: petLookLeft 0.5s ease;
+}
+
+#characterWrap.state-look-right {
+  animation: petLookRight 0.5s ease;
+}
+
+#characterWrap.state-jump {
+  animation: petJump 0.42s ease;
+}
+
+#characterWrap.state-angry {
+  animation: petAngry 0.52s ease;
+  filter: saturate(1.15);
+}
+
+#characterWrap.state-sweep {
+  animation: petSweep 1.2s ease-in-out;
+}
+
+#characterWrap.state-sweep #broomProp {
+  opacity: 1;
+  animation: broomSweep 1.2s ease-in-out;
+}
+
+@keyframes petIdle {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  30% {
+    transform: translateY(-2px) rotate(-1.2deg) scale(1.01);
+  }
+  70% {
+    transform: translateY(1px) rotate(1.2deg) scale(0.995);
+  }
+}
+
+@keyframes petTap {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.95) translateY(1px);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes petHappy {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translateY(-2px) rotate(-2.2deg) scale(1.03);
+  }
+  50% {
+    transform: translateY(-1px) rotate(2.2deg) scale(1.03);
+  }
+  75% {
+    transform: translateY(-2px) rotate(-1.4deg) scale(1.02);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes petShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+}
+
+@keyframes petBlink {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.92);
+  }
+}
+
+@keyframes petLookLeft {
+  0%,
+  100% {
+    transform: rotate(0deg) translateX(0);
+  }
+  50% {
+    transform: rotate(-3deg) translateX(-4px);
+  }
+}
+
+@keyframes petLookRight {
+  0%,
+  100% {
+    transform: rotate(0deg) translateX(0);
+  }
+  50% {
+    transform: rotate(3deg) translateX(4px);
+  }
+}
+
+@keyframes petJump {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  30% {
+    transform: translateY(-10px) scale(1.03);
+  }
+  60% {
+    transform: translateY(-4px) scale(0.99);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes petAngry {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  20% {
+    transform: translateX(-2px) rotate(-1deg);
+  }
+  40% {
+    transform: translateX(2px) rotate(1deg);
+  }
+  60% {
+    transform: translateX(-1px) rotate(-0.8deg);
+  }
+  80% {
+    transform: translateX(1px) rotate(0.8deg);
+  }
+}
+
+@keyframes petSweep {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  30% {
+    transform: translateY(-1px) rotate(-4deg);
+  }
+  60% {
+    transform: translateY(1px) rotate(4deg);
+  }
+}
+
+@keyframes broomSweep {
+  0% {
+    opacity: 0;
+    transform: rotate(-36deg) translateX(0);
+  }
+  25% {
+    opacity: 1;
+    transform: rotate(-16deg) translateX(2px);
+  }
+  50% {
+    opacity: 1;
+    transform: rotate(-34deg) translateX(-2px);
+  }
+  75% {
+    opacity: 1;
+    transform: rotate(-14deg) translateX(2px);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(-36deg) translateX(0);
+  }
+}

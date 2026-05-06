@@ -1,0 +1,75 @@
+{
+  "name": "lizeyan-pet",
+  "version": "1.0.0",
+  "description": "李泽言QQ人桌宠（Electron）",
+  "author": "lizeyan",
+  "main": "src/main/index.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.0.0"
+  },
+  "build": {
+    "appId": "com.lizeyan.pet",
+    "productName": "李泽言QQ人桌宠",
+    "asar": true,
+    "compression": "normal",
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer.js",
+      "index.html",
+      "style.css",
+      "形象*.jpg",
+      "对话框*.png",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "bin",
+        "to": "bin",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "models",
+        "to": "models",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "signAndEditExecutable": false,
+      "artifactName": "${productName}-Setup-${version}.${ext}",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "李泽言QQ人桌宠"
+    }
+  },
+  "dependencies": {
+    "@larksuiteoapi/node-sdk": "^1.62.1",
+    "clipboardy": "^5.3.1",
+    "express": "^5.2.1",
+    "node-fetch": "^2.7.0",
+    "ws": "^8.20.0"
+  }
+}

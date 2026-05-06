@@ -1,0 +1,14 @@
+{
+  "petWindow": {
+    "width": 450,
+    "height": 680
+  },
+  "searchWindow": {
+    "width": 1000,
+    "height": 520
+  },
+  "shortcut": "CommandOrControl+Alt+L",
+  "tray": {
+    "tooltip": "李泽言桌宠"
+  }
+}

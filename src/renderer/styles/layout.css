@@ -1,0 +1,504 @@
+.bubble {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  width: fit-content;
+  max-width: min(320px, calc(100% - 24px));
+  min-height: 36px;
+  max-height: 500px;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #f6ead2;
+  display: none;
+  align-items: flex-start;
+  overflow: hidden;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  z-index: 12;
+  -webkit-app-region: no-drag;
+  pointer-events: auto;
+  opacity: 0;
+  transition: opacity 0.23s ease;
+}
+
+/* 气泡滚动条美化 */
+.bubble::-webkit-scrollbar {
+  width: 4px;
+}
+.bubble::-webkit-scrollbar-track {
+  background: transparent;
+}
+.bubble::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+.bubble::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* 到岗一键梳理专属气泡样式 */
+.bubble.work-arrival-bubble {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(92vw, 980px);
+  min-width: min(720px, calc(100vw - 32px));
+  max-width: min(92vw, 980px);
+  max-height: min(88vh, 900px);
+  min-height: 360px;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  border-radius: 18px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+  z-index: 1000001;
+  overflow: hidden;
+}
+
+/* 会议全链路助手专属气泡样式 */
+.bubble.meeting-assistant-bubble {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(92vw, 980px);
+  min-width: min(720px, calc(100vw - 32px));
+  max-width: min(92vw, 980px);
+  max-height: min(88vh, 900px);
+  min-height: 360px;
+}
+
+/* 每周工作周报专属气泡样式 */
+.bubble.weekly-report-bubble {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(92vw, 980px);
+  min-width: min(720px, calc(100vw - 32px));
+  max-width: min(92vw, 980px);
+  max-height: min(88vh, 900px);
+  min-height: 360px;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  border-radius: 18px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+  z-index: 1000001;
+  overflow: hidden;
+}
+
+.bubble-panel-shell {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  color: #f6ead2;
+  background: rgba(18, 18, 23, 0.96);
+}
+
+.bubble-panel-head {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(28, 28, 36, 0.98);
+}
+
+.bubble-panel-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #fff4df;
+}
+
+.bubble-panel-close {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.bubble-panel-close:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.bubble-panel-close,
+.bubble-panel-head,
+.bubble-panel-title,
+.bubble-panel-body {
+  -webkit-app-region: no-drag;
+}
+
+.bubble-panel-body {
+  flex: 1;
+  padding: 16px 20px 18px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+#bubbleChat.chat {
+  border: 2px solid #d4b26a;
+  border-radius: 16px;
+  background: rgba(18, 18, 23, 0.92);
+}
+
+#bubbleChat.chat.work-arrival-bubble {
+  max-width: min(92vw, 980px);
+  overflow: auto;
+}
+
+#bubbleChat.chat.weekly-report-bubble {
+  max-width: min(92vw, 980px);
+  overflow: auto;
+}
+
+#bubbleChat.reminder {
+  right: 8px;
+  left: auto;
+  border: 2px solid #9d2b38;
+  border-radius: 16px;
+  background: rgba(130, 31, 42, 0.2);
+  color: #ffe7ea;
+}
+
+#bubbleSelf.self {
+  right: 8px;
+  left: auto;
+  border: 2px solid #8c8c99;
+  border-radius: 16px;
+  background: rgba(42, 42, 53, 0.85);
+}
+
+#plannerPanel {
+  position: relative;
+  z-index: 20;
+  margin-top: 8px;
+  padding: 8px 10px 10px;
+  border-radius: 14px;
+  background: rgba(18, 18, 23, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: opacity 0.2s ease, transform 0.2s ease, max-height 0.2s ease, margin-top 0.2s ease;
+}
+
+#plannerPanel.collapsed {
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  border-width: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.panel-collapse-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(140, 140, 153, 0.55);
+  background: rgba(42, 42, 53, 0.65);
+  color: #f3f3f5;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mode-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.mode-btn {
+  height: 30px;
+  border-radius: 9px;
+  border: 1px solid rgba(140, 140, 153, 0.45);
+  background: rgba(42, 42, 53, 0.5);
+  color: #f3f3f5;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.mode-btn.active {
+  border-color: rgba(212, 178, 106, 0.9);
+  background: rgba(212, 178, 106, 0.18);
+  color: #f6ead2;
+  font-weight: 700;
+}
+
+.quick-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+#quickInput,
+#taskTitle,
+#taskTime,
+#taskRepeat {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(140, 140, 153, 0.4);
+  background: rgba(0, 0, 0, 0.3);
+  color: #f3f3f5;
+  outline: none;
+}
+
+#quickInput::placeholder {
+  color: rgba(243, 243, 245, 0.6);
+}
+
+#quickInput:focus,
+#taskTitle:focus,
+#taskTime:focus,
+#taskRepeat:focus {
+  border-color: rgba(157, 43, 56, 0.75);
+  box-shadow: 0 0 0 2px rgba(157, 43, 56, 0.18);
+}
+
+#quickParseBtn,
+#confirmBtn,
+#doneBtn,
+#laterBtn,
+#kbAddBtn,
+.del-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 0 12px;
+  height: 34px;
+  color: #fff;
+  font-weight: 600;
+  background: linear-gradient(135deg, #9d2b38, #b54450);
+  cursor: pointer;
+}
+
+.ghost,
+#cancelBtn,
+#skipBtn {
+  border: 1px solid rgba(140, 140, 153, 0.5);
+  border-radius: 10px;
+  height: 34px;
+  padding: 0 12px;
+  background: rgba(42, 42, 53, 0.45);
+  color: #f3f3f5;
+  cursor: pointer;
+}
+
+.kb-card {
+  margin-top: 10px;
+  border: 1px solid rgba(212, 178, 106, 0.35);
+  border-radius: 12px;
+  padding: 10px;
+  background: rgba(18, 18, 23, 0.92);
+}
+
+.kb-title {
+  color: #d4b26a;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.kb-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.kb-row-compact {
+  grid-template-columns: 1fr auto auto;
+}
+
+#kbQuestion,
+#kbAnswer,
+#kbKeywords {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(140, 140, 153, 0.4);
+  background: rgba(0, 0, 0, 0.3);
+  color: #f3f3f5;
+  outline: none;
+}
+
+#kbQuestion:focus,
+#kbAnswer:focus,
+#kbKeywords:focus {
+  border-color: #d4b26a;
+}
+
+#kbList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 110px;
+  overflow: auto;
+}
+
+.kb-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  border-radius: 10px;
+  background: rgba(42, 42, 53, 0.55);
+  border: 1px solid rgba(140, 140, 153, 0.2);
+  margin-bottom: 7px;
+}
+
+.kb-item-q {
+  font-size: 12px;
+  color: #f3f3f5;
+}
+
+.kb-item-meta {
+  font-size: 11px;
+  color: #c8c8d2;
+  margin-top: 2px;
+}
+
+.confirm-card {
+  margin-top: 10px;
+  border: 1px solid rgba(212, 178, 106, 0.35);
+  border-radius: 12px;
+  padding: 10px;
+  background: rgba(18, 18, 23, 0.92);
+}
+
+/* Electron：父容器是 drag 区域时，个别环境下需要显式 no-drag 才能点击 */
+.confirm-card,
+.confirm-card * ,
+#confirmBtn,
+#cancelBtn {
+  -webkit-app-region: no-drag;
+  pointer-events: auto;
+}
+
+#confirmCard {
+  position: relative;
+  z-index: 21;
+}
+
+.confirm-card {
+  position: relative;
+  z-index: 5;
+}
+
+#confirmBtn,
+#cancelBtn {
+  position: relative;
+  z-index: 6;
+}
+
+.confirm-copy {
+  color: #d4b26a;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.field-row label {
+  color: #c8c8d2;
+  font-size: 12px;
+}
+
+.weekdays {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.weekday {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(140, 140, 153, 0.35);
+  background: rgba(42, 42, 53, 0.35);
+  color: #f3f3f5;
+  font-size: 12px;
+  user-select: none;
+}
+
+.weekday input {
+  accent-color: #d4b26a;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.reminder-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.reminder-actions button {
+  border: none;
+  border-radius: 12px;
+  padding: 8px 16px;
+  height: 36px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-app-region: no-drag;
+}
+
+.reminder-actions #doneBtn {
+  background: rgba(255, 255, 255, 0.95);
+  color: #9d2b38;
+}
+
+.reminder-actions #doneBtn:hover {
+  background: #fff;
+  transform: translateY(-1px);
+}

@@ -1,0 +1,7 @@
+.hidden {
+  display: none;
+}
+
+.reminder-overlay.hidden {
+  pointer-events: none;
+}

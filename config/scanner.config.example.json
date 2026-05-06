@@ -1,0 +1,5 @@
+{
+  "preferredRoots": ["Desktop", "Downloads", "Documents"],
+  "maxDepth": 7,
+  "skipDirs": ["$recycle.bin", "system volume information", "windows", "program files", "program files (x86)", "programdata", "msocache", "recovery", ".git", "node_modules"]
+}

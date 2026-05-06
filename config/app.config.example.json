@@ -1,0 +1,41 @@
+{
+  "appId": "com.lizeyan.pet",
+  "productName": "李泽言QQ人桌宠",
+  "window": {
+    "pet": {
+      "width": 450,
+      "height": 680
+    },
+    "search": {
+      "width": 1000,
+      "height": 520
+    }
+  },
+  "keyboard": {
+    "showPetShortcut": "CommandOrControl+Alt+L"
+  },
+  "runtime": {
+    "larkBackendBaseUrl": "http://127.0.0.1:3000",
+    "llmPort": 18080,
+    "autoStartLlmDelayMs": 1500,
+    "autoFetchBriefingDelayMs": 5000,
+    "autoFetchBriefingIntervalMs": 3600000
+  },
+  "paths": {
+    "assetsDir": "assets",
+    "modelsDir": "resources/models",
+    "binDir": "resources/bin",
+    "knowledgeDir": "knowledge",
+    "llmConfigFileName": "llm.config.json",
+    "larkConfigFileName": "lark.config.json",
+    "appConfigFileName": "app.config.json"
+  },
+  "ui": {
+    "trayTooltip": "李泽言桌宠"
+  },
+  "scanner": {
+    "preferredRoots": ["Desktop", "Downloads", "Documents"],
+    "maxDepth": 7,
+    "skipDirs": ["$recycle.bin", "system volume information", "windows", "program files", "program files (x86)", "programdata", "msocache", "recovery", ".git", "node_modules"]
+  }
+}

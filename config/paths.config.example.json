@@ -1,0 +1,9 @@
+{
+  "assetsDir": "assets",
+  "modelsDir": "resources/models",
+  "binDir": "resources/bin",
+  "knowledgeDir": "knowledge",
+  "llmConfigFileName": "llm.config.json",
+  "larkConfigFileName": "lark.config.json",
+  "appConfigFileName": "app.config.json"
+}
